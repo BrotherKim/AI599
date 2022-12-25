@@ -8,10 +8,11 @@
 # variables
 TARGET = 'prison'
 TARGET_SET = 'avail' # all, avail, nonavail
-TARGET_START = 1 # 0 if you want zero values, INCLUDE THST VALUE
+TARGET_START = 0 # 0 if you want zero values, INCLUDE THST VALUE
 TARGET_END = 36 # INCLUDE THIS VALUE
 TARGET_APPROX = 0 # '2'개월 또는 '1000000'원
-TARGET_OPT = 'binary' # class, binary
+TARGET_COUNT = 10000 # 한 컬럼 최대 갯수
+TARGET_OPT = 'class' # class, binary
 TRAIN_COLUMN = 'fy' # raw, facts, statutes, yh, fy
 DATA_DIR = '/content/drive/MyDrive/AI599/data'
 
@@ -145,14 +146,18 @@ def generateDataSet(dataframe, max_cnt, classopt='class'):
 # main                                    #
 ###########################################
 
-# get datasets
-dataset_card = "lbox/lbox_open"
-task = "precedent_corpus"
-data = datasets.load_dataset(dataset_card, task)
+# # get datasets
+# dataset_card = "lbox/lbox_open"
+# task = "precedent_corpus"
+# data = datasets.load_dataset(dataset_card, task)
 
-# ## filtering lbox_open data
-# 2019.6.25 이후에 발생한 음주운전 데이터를 추출합니다.
-df = pd.DataFrame( (v for v in data['train']) )
+# # ## filtering lbox_open data
+# # 2019.6.25 이후에 발생한 음주운전 데이터를 추출합니다.
+# df = pd.DataFrame( (v for v in data['train']) )
+# df.to_csv(f'{DATA_DIR}/lbox.csv')
+
+# load dataset from gdrive
+df = pd.read_csv(f'{DATA_DIR}/lbox.csv')
 
 # 주문과 형량이 나타나는 사용 가능한 데이터 우선 추출
 avail_df = df[ \
@@ -177,9 +182,10 @@ noy = avail_df[~avail_df['precedent'].str.contains('양형의 이유')]
 
 # 양형의 사유가 없는 집합에서 "벌"-"나", "징"-"나" 데이터셋 생성. 이를 a, b라고 칭함
 dataset = {}
-dataset['all'] = generateDataSet(avail_df, 2000, TARGET_OPT)
-dataset['avail'] = generateDataSet(yesy, 2000, TARGET_OPT)
-dataset['nonavail'] = generateDataSet(noy, 2000, TARGET_OPT)
+dataset[f'{TARGET}_{TARGET_OPT}_all'] = generateDataSet(avail_df, TARGET_COUNT, TARGET_OPT)
+dataset[f'{TARGET}_{TARGET_OPT}_avail'] = generateDataSet(yesy, TARGET_COUNT, TARGET_OPT)
+dataset[f'{TARGET}_{TARGET_OPT}_nonavail'] = generateDataSet(noy, TARGET_COUNT, TARGET_OPT)
 
 # 데이터셋 저장
-print(dataset['all'])
+for name, dset in dataset.items():
+    dset.to_csv(f'{DATA_DIR}/{name}.csv')
