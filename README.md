@@ -1,5 +1,9 @@
 # AI599
 
+## Repo. 사용법
+- colab으로 env. 세팅
+- vscode ssh로 접속(https://dacon.io/forum/406050)
+
 ## 해야할 것
 - 데이터 드라이브에 모두 올려놓기
 - ipynb 파일 모두 py로 컨버팅
