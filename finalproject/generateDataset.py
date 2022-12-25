@@ -7,13 +7,10 @@
 
 # variables
 TARGET = 'prison'
-TARGET_SET = 'avail' # all, avail, nonavail
 TARGET_START = 0 # 0 if you want zero values, INCLUDE THST VALUE
 TARGET_END = 36 # INCLUDE THIS VALUE
-TARGET_APPROX = 0 # '2'개월 또는 '1000000'원
 TARGET_COUNT = 10000 # 한 컬럼 최대 갯수
 TARGET_OPT = 'class' # class, binary
-TRAIN_COLUMN = 'fy' # raw, facts, statutes, yh, fy
 DATA_DIR = '/content/drive/MyDrive/AI599/data'
 
 ###########################################
