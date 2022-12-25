@@ -7,13 +7,14 @@
 
 # variables
 TARGET = 'prison'
-TARGET_SET = 'avail' # all, avail, nonavail
 TARGET_APPROX = 0 # '2'개월 또는 '1000000'원
 TARGET_COUNT = 10000 # 한 컬럼 최대 갯수
 TARGET_OPT = 'class' # class, binary
+TARGET_SET = f'{TARGET}_{TARGET_OPT}_avail' # all, avail, nonavail
+
 TRAIN_COLUMN = 'fy' # raw, facts, statutes, yh, fy
 DATA_DIR = '/content/drive/MyDrive/AI599/data'
-DATA_DIR = '/content/drive/MyDrive/AI599/model'
+MODEL_DIR = '/content/drive/MyDrive/AI599/model'
 
 ###########################################
 # main                                    #
@@ -44,11 +45,11 @@ dataset[f'{TARGET}_{TARGET_OPT}_all'] = None
 dataset[f'{TARGET}_{TARGET_OPT}_avail'] = None
 dataset[f'{TARGET}_{TARGET_OPT}_nonavail'] = None
 for name, dset in dataset.items():
-    pd.read_csv(f'{DATA_DIR}/{name}.csv')
+    dataset[name] = pd.read_csv(f'{DATA_DIR}/{name}.csv')
 
-print(dataset['all'][TARGET].value_counts())
-print(dataset['avail'][TARGET].value_counts())
-print(dataset['nonavail'][TARGET].value_counts())
+print(dataset[f'{TARGET}_{TARGET_OPT}_all'][TARGET].value_counts())
+print(dataset[f'{TARGET}_{TARGET_OPT}_avail'][TARGET].value_counts())
+print(dataset[f'{TARGET}_{TARGET_OPT}_nonavail'][TARGET].value_counts())
 
 
 # https://data-newbie.tistory.com/721
@@ -346,13 +347,11 @@ def execEval(dataset, target, trainset, modelpath):
 # check variables
 print(TARGET)
 print(TARGET_SET)
-print(TARGET_START)
-print(TARGET_END)
 print(TARGET_APPROX)
 print(TARGET_OPT)
 print(TRAIN_COLUMN)
 dataset[TARGET_SET]
-type(dataset['avail'])
+type(dataset[TARGET_SET])
 # 양형의 이유 있는 데이터 중 etc로 prison classification, MSE
 #model = execTrain(dataset[TARGET_SET], TARGET, TRAIN_COLUMN)
 #torch.save(model, f'{MODEL_DIR}/{TARGET}_{TARGET_SET}_{TRAIN_COLUMN}_{TARGET_START}_{TARGET_END}_model_imb.pt')
